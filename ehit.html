@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Text replacer</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/* Style the body */
+body {
+  font-family: Arial;
+  margin: 0;
+}
+
+/* Header/Logo Title */
+.header {
+  padding: 10px;
+  text-align: center;
+  background: #1abc9c;
+  color: white;
+  font-size: 30px;
+}
+/* Page Content */
+.content {padding:20px;}
+
+
+.myDiv {
+  border: 0px outset red;
+  background-color: lightblue;    
+  text-align: center;
+}
+
+#parent {
+  display: flex;
+}
+#narrow {
+  width: 200px;
+  background: lightblue;
+  /* Just so it's visible */
+}
+#wide {
+  flex: 1;
+  /* Grow to rest of container */
+  background: lightgreen;
+  /* Just so it's visible */
+}
+    
+    div.justified {
+        display: flex;
+        justify-content: center;
+    }
+
+
+</style>
+
+
+  <script type='text/javascript'>
+
+      // This function scans text for strings inside [ ], and returns them in array
+      function TextSearch(testString)
+      {
+        var reBrackets = /\[(.*?)\]/g;
+        var listOfText = [];
+        var found;
+       
+        while(found = reBrackets.exec(testString))
+        {
+          listOfText.push(found[1]);
+        };
+       
+        return(listOfText);
+       }
+
+      //Function for mapping 
+      function mappings(arr)
+      {
+         const map = arr.reduce((acc, e) => acc.set(e, (acc.get(e) || 0) + 1), new Map());
+        //console.info([...map.keys()])
+        //console.info([...map.values()])
+        //console.info([...map.entries()])
+         return([...map.keys()]) ;
+      }
+
+      function TextReplace(x,str,y)
+      {// replaces x with y, in string str
+        const regex = new RegExp(x,'g');
+        let res = str.replace( regex , y);
+        return(res);
+      }
+ 
+      function addFields(arr)
+      {
+        // Generate a dynamic number of inputs
+        var number = arr.length;
+        // Get the element where the inputs will be added to
+        var container = document.getElementById("container");
+
+        // Remove every children it had before
+        // Otherwise clickinng button will keep on adding new fields
+        while (container.hasChildNodes()) 
+        {
+          container.removeChild(container.lastChild);
+        }
+        
+        const btn = document.createElement("button");
+        const y = [];
+
+        for (i=0;i<number;i++)
+        {
+          // Append a node with a random text
+          container.appendChild(document.createTextNode(arr[i]));
+          // Create an <input> element, set its type and name attributes
+          var input = document.createElement("input");
+          input.type = "text";
+          input.name = "member" + i;
+          input.id = "member" + i; // added recently
+          container.appendChild(input);
+          // Append a line break
+          container.appendChild(document.createElement("br"));
+          y[i] = input.id;
+         }
+
+         btn.innerHTML = "Submit";
+         btn.onclick=function(){
+         // document.getElementById("member1").value ;
+
+         A = [];
+         var B = document.getElementById("w3review").value;
+
+         // Replace all the string inside [] with user input
+         for(i=0; i<number;i++)
+         {
+            A[i] = document.getElementById("member"+i).value;
+            B = TextReplace(arr[i],B,A[i]);
+         }
+
+         // remove all the [] from the string
+         B = B.replace(/[\[\]']+/g,'');
+         document.getElementById("w3").innerHTML = B;
+         };
+         
+         container.appendChild(btn);
+         
+         }
+
+        function connec() {
+
+         x = document.getElementById("w3review").value;
+         var Y = TextSearch(x);
+         ii = mappings(Y);
+         addFields(ii);
+
+        }
+
+    </script>
+</head>
+
+
+</head>
+<body>
+
+<div class="header">
+  <h1>XML Template Tool</h1>
+  <p>Accounts Set-up Ops</p>
+</div>
+
+
+<div id="parent">
+  <div id="wide">
+  <p>XML Template : </p>
+	
+<form>
+  <div class="justified">
+  <textarea id="w3review" name="w3review" class="resizable text-editor processed" style="width:65%;height:250px;resize:none">
+  </textarea>
+
+ 
+</div>
+ <button href="#" id="filldetails" onclick="connec()">Submit Code Template </button>
+  </div>
+  <div id="narrow">
+  	<p> Fill details : </p>
+  	<div id="container">
+  	</div>
+  	
+  </div>
+</div>
+
+
+
+
+
+ <textarea id="w3" name="w3" class="resizable text-editor processed" style="width:65%;height:250px;resize:none;align-content:center">
+  </textarea>
+
+
+  <br>
+  <p id = "punni"></p>
+   <p id = "punni2"></p>
+</form>
+
+   <!-- <a href="#" id="filldetails" onclick="connec()">Fill Details</a>
+    <p id = "Ehit"> </p>
+   <div id="container"/> -->
+   
+
+
+</body>
+</html>
